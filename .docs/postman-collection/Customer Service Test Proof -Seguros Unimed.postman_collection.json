@@ -1,0 +1,548 @@
+{
+	"info": {
+		"_postman_id": "89586286-8814-4bdb-ba93-da2cdd77fbf6",
+		"name": "Customer Service Test Proof -Seguros Unimed",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1740761",
+		"_collection_link": "https://thiago-sperandio.postman.co/workspace/Seguros-Unimed~148936d6-9337-4db2-9ef9-71bdde6af139/collection/1740761-89586286-8814-4bdb-ba93-da2cdd77fbf6?action=share&source=collection_link&creator=1740761"
+	},
+	"item": [
+		{
+			"name": "customers",
+			"item": [
+				{
+					"name": "/ (search)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/customers?name-like=O&gender-char=F",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "name-like",
+									"value": "O"
+								},
+								{
+									"key": "email-like",
+									"value": "a%@",
+									"disabled": true
+								},
+								{
+									"key": "gender-char",
+									"value": "F"
+								},
+								{
+									"key": "city-like",
+									"value": "ia",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "ES",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name,desc",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "gender,desc",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "id,desc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "search (sem paginação)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{SERVER_URL}}/customers",
+									"host": [
+										"{{SERVER_URL}}"
+									],
+									"path": [
+										"customers"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Jan 2024 14:12:43 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 5,\n        \"name\": \"Gamora\",\n        \"email\": \"gamora@vingadores.com\",\n        \"gender\": \"F\"\n    },\n    {\n        \"id\": 1,\n        \"name\": \"Homem Aranha\",\n        \"email\": \"aranha@vingadores.com\",\n        \"gender\": \"M\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Namor\",\n        \"email\": \"namor@vingadores.com\",\n        \"gender\": \"M\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Thor\",\n        \"email\": \"thor@vingadores.com\",\n        \"gender\": \"M\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Viuva Negra\",\n        \"email\": \"viuva@vingadores.com\",\n        \"gender\": \"F\"\n    }\n]"
+						},
+						{
+							"name": "search (com paginação)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{SERVER_URL}}/customers",
+									"host": [
+										"{{SERVER_URL}}"
+									],
+									"path": [
+										"customers"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "name,asc",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "gender,desc",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Jan 2024 14:55:32 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 5,\n            \"name\": \"Gamora\",\n            \"email\": \"gamora@vingadores.com\",\n            \"gender\": \"F\"\n        },\n        {\n            \"id\": 1,\n            \"name\": \"Homem Aranha\",\n            \"email\": \"aranha@vingadores.com\",\n            \"gender\": \"M\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Namor\",\n            \"email\": \"namor@vingadores.com\",\n            \"gender\": \"M\"\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"sorted\": true,\n            \"unsorted\": false,\n            \"empty\": false\n        },\n        \"pageNumber\": 0,\n        \"pageSize\": 3,\n        \"offset\": 0,\n        \"paged\": true,\n        \"unpaged\": false\n    },\n    \"totalElements\": 5,\n    \"totalPages\": 2,\n    \"last\": false,\n    \"numberOfElements\": 3,\n    \"size\": 3,\n    \"number\": 0,\n    \"sort\": {\n        \"sorted\": true,\n        \"unsorted\": false,\n        \"empty\": false\n    },\n    \"first\": true,\n    \"empty\": false\n}"
+						},
+						{
+							"name": "search (com query params de filtro)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{SERVER_URL}}/customers?name-like=O&email-like=a%@&gender-char=F",
+									"host": [
+										"{{SERVER_URL}}"
+									],
+									"path": [
+										"customers"
+									],
+									"query": [
+										{
+											"key": "name-like",
+											"value": "O"
+										},
+										{
+											"key": "email-like",
+											"value": "a%@"
+										},
+										{
+											"key": "gender-char",
+											"value": "F"
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "name,desc",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "gender,desc",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 07 Jan 2024 22:20:46 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 5,\n            \"name\": \"Gamora\",\n            \"email\": \"gamora@vingadores.com\",\n            \"gender\": \"F\"\n        }\n    ],\n    \"pageable\": {\n        \"sort\": {\n            \"empty\": false,\n            \"sorted\": true,\n            \"unsorted\": false\n        },\n        \"offset\": 0,\n        \"pageNumber\": 0,\n        \"pageSize\": 10,\n        \"unpaged\": false,\n        \"paged\": true\n    },\n    \"last\": true,\n    \"totalElements\": 1,\n    \"totalPages\": 1,\n    \"size\": 10,\n    \"number\": 0,\n    \"sort\": {\n        \"empty\": false,\n        \"sorted\": true,\n        \"unsorted\": false\n    },\n    \"first\": true,\n    \"numberOfElements\": 1,\n    \"empty\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/customers/:id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"customers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Customer ID to find"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/ (insert)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Uma nova pessoa \",\r\n    \"email\": \"testnew@newtest.com\",\r\n    \"gender\": \"M\"\r\n}"
+						},
+						"url": {
+							"raw": "{{SERVER_URL}}/customers/",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"customers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/{id} (update)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Uma pessoa modificada\",\r\n    \"email\": \"testold@updatetest.com\",\r\n    \"gender\": \"F\"\r\n}"
+						},
+						"url": {
+							"raw": "{{SERVER_URL}}/customers/:id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"customers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "The ID value path of the Customer to update"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/{id} (delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/customers/:id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"customers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1000",
+									"description": "The ID value path of the Customer to remove"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "addresses",
+			"item": [
+				{
+					"name": "/cep-api/{cep} (search check)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/addresses/cep-api/:cep",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"addresses",
+								"cep-api",
+								":cep"
+							],
+							"variable": [
+								{
+									"key": "cep",
+									"value": "29.103-013",
+									"description": "CEP to search in external API"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/addresses/:id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"addresses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2",
+									"description": "Address ID to find"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/customer/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/addresses/customer/:customer-id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"addresses",
+								"customer",
+								":customer-id"
+							],
+							"variable": [
+								{
+									"key": "customer-id",
+									"value": "2",
+									"description": "Customer ID to obtain your addresses"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/ (insert)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": 1,\r\n    \"zipCode\": \"29152471\",\r\n    \"addressNumber\": \"44\",\r\n    \"addressComplement\": \"Segundo piso\"\r\n}"
+						},
+						"url": {
+							"raw": "{{SERVER_URL}}/addresses/",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"addresses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/{id} (update)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1000,\r\n    \"customerId\": 1,\r\n    \"zipCode\": \"29100100\",\r\n    \"addressNumber\": \"123\",\r\n    \"addressComplement\": \"(Atualizado)\"\r\n}"
+						},
+						"url": {
+							"raw": "{{SERVER_URL}}/addresses/:id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"addresses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1000",
+									"description": "The ID value path of the Address to update"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/{id} (delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER_URL}}/addresses/:id",
+							"host": [
+								"{{SERVER_URL}}"
+							],
+							"path": [
+								"addresses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1000",
+									"description": "The ID value path of the Address to remove"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
