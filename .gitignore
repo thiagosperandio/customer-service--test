@@ -33,6 +33,9 @@
 .history/*
 .attach*
 
+# Log file
+*.log
+
 ##################
 
 .metadata

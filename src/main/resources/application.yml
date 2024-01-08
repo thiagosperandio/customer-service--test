@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    url:
+      jdbc:
+        h2:
+          mem: testdb
+    driverClassName: org.h2.Driver
+    username: admin
+    password: admin
+    initialization:
+      mode: always
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings.web-allow-others: true
+  output:
+    ansi:
+      enabled: ALWAYS # to colorize output
+
+server:
+  port: 8080
+
+logging:
+  level: # ERROR, WARN, INFO, DEBUG, or TRACE
+    root: info # dev: debug
+    web: trace # dev: debug
+    sql: debug # dev: debug
+    # java:
+    #   sql: debug
+    # javax:
+    #   ws: debug
+    feign: trace # dev: debug
+    org:
+      springframework:
+        # web: debug
+        # jdbc:
+        #   core:
+        #     JdbcTemplate: debug # dev: debug
+        #     StatementCreatorUtils: trace # dev: trace
+        transaction:
+          interceptor: trace # dev: trace, to easily trace transaction behavior
+      hibernate:
+        # SQL: debug # dev: debug
+        orm:
+          jdbc:
+            bind: trace # dev: trace, show parameter values, for Hibernate 6 (spring-boot 3.*.*)
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace # dev: trace, show parameter values, for Hibernate 5 (spring-boot 2.7.*)
+      apache:
+        http: debug
+    com:
+      zenvia: trace
+    br:
+      com:
+        example: trace
