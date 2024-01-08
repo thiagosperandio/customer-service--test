@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.api.clients.CepApiClient;
 import com.example.api.domain.Address;
+import com.example.api.domain.Customer;
 import com.example.api.dto.client.CepClientDTO;
+import com.example.api.dto.model.AddressDTO;
 import com.example.api.exception.BusinessException;
 import com.example.api.repository.AddressRepository;
 
@@ -35,21 +37,46 @@ public class AddressService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Address insertAddress(@Valid @NotNull Address address) {
+	public Address insertAddress(@Valid @NotNull AddressDTO addressDTO) {
+		Address address = mapFrom(addressDTO);
+		if (address.getId() != null) {
+			throw new BusinessException("ID do objeto está preenchido, não é permitido informar ID.");
+		}
 		address = save(address);
 
 		return address;
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Address updateAddress(Long id, @Valid @NotNull Address address) {
+	public Address updateAddress(Long id, @Valid @NotNull AddressDTO addressDTO) {
+		Address address = mapFrom(addressDTO);
 		validateUpdate(id, address);
+
 		repository.findById(address.getId()).ifPresentOrElse(
 				addressFinded -> save(address),
 				() -> new BusinessException("Address não encontrado no sistema"));
 
 		return repository.findById(id)
 				.orElseThrow(() -> new BusinessException("Address not exists"));
+	}
+
+	private Address mapFrom(AddressDTO addressDTO) {
+		return Address.builder()
+				.id(addressDTO.getId())
+				.customer(Customer.builder()
+						.id(addressDTO.getCustomerId())
+						.build())
+				.zipCode(addressDTO.getZipCode())
+				.addressLine(addressDTO.getAddressLine())
+				.addressComplement(addressDTO.getAddressComplement())
+				.district(addressDTO.getDistrict())
+				.city(addressDTO.getCity())
+				.stateAbbreviation(addressDTO.getStateAbbreviation())
+				.ibgeCode(addressDTO.getIbgeCode())
+				.giaCode(addressDTO.getGiaCode())
+				.dddCode(addressDTO.getDddCode())
+				.siafiCode(addressDTO.getSiafiCode())
+				.build();
 	}
 
 	private void validateUpdate(Long id, Address address) {

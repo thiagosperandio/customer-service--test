@@ -60,11 +60,7 @@ public class CustomerService {
 		if (customerDTO.getId() != null) {
 			throw new BusinessException("ID do objeto está preenchido, não é permitido informar ID.");
 		}
-		Customer customer = Customer.builder()
-				.name(customerDTO.getName())
-				.email(customerDTO.getEmail())
-				.gender(customerDTO.getGender())
-				.build();
+		Customer customer = mapFrom(customerDTO);
 		customer = save(customer);
 
 		return customer;
@@ -72,20 +68,16 @@ public class CustomerService {
 
 	@Transactional(rollbackFor = Exception.class)
 	public Customer updateCustomer(Long id, @Valid @NotNull CustomerDTO customerDTO) {
-		Customer customer = Customer.builder()
-				.id(customerDTO.getId())
-				.name(customerDTO.getName())
-				.email(customerDTO.getEmail())
-				.gender(customerDTO.getGender())
-				.build();
+		Customer customer = mapFrom(customerDTO);
 		validateUpdate(id, customer);
+
 		repository.findById(customer.getId()).ifPresentOrElse(
 				customerFinded -> {
 					if (customer.getName().length() >= MIN_CHAR_VALID_NAME) {
 						save(customer);
 					} else {
 						throw new BusinessException("Não é permitido alterar o nome '" + customerFinded.getName()
-								+ "', que iria mudar de nome para '" + customer.getName()
+								+ "', que iria mudar para '" + customer.getName()
 								+ "', pois para atualizar é necessário possui mais do que " + MIN_CHAR_VALID_NAME
 								+ " caracteres !!!");
 					}
@@ -94,6 +86,15 @@ public class CustomerService {
 
 		return repository.findById(id)
 				.orElseThrow(() -> new BusinessException("Customer not exists"));
+	}
+
+	private Customer mapFrom(CustomerDTO customerDTO) {
+		return Customer.builder()
+				.id(customerDTO.getId())
+				.name(customerDTO.getName())
+				.email(customerDTO.getEmail())
+				.gender(customerDTO.getGender())
+				.build();
 	}
 
 	private void validateUpdate(Long id, Customer customer) {
