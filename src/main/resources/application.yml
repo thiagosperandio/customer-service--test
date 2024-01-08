@@ -1,0 +1,98 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:${DB_NAME:testdb}
+    driverClassName: org.h2.Driver
+    username: ${DB_USER:admin}
+    password: ${DB_PASSW:admin}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings.web-allow-others: true
+  sql:
+    init:
+      mode: embedded
+  jpa:
+    open-in-view: false
+    show-sql: false # dev: true
+    hibernate:
+      ddl-auto: create-drop # Hibernate ddl auto (create, create-drop, validate, update)
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        "[generate_statistics]": false # dev: true, Log info to get a better insight into Hibernate internal workings.
+  messages:
+    encoding: UTF-8
+  output:
+    ansi:
+      enabled: ALWAYS # to colorize output
+
+server:
+  port: 8080
+
+app:
+  auth:
+    user: user
+    password: 87b&dud!ub8*1vAV&HvvQ
+  show-exception-response: false
+
+clients:
+  url:
+    cep: https://viacep.com.br/
+
+feign:
+  client:
+    config:
+      default:
+        logger-level: full
+        connectTimeout: 300000
+        readTimeout: 300000
+
+# > ATTENTION: these values are in the default properties file only because it is a test application.
+# > The right thing to do is to create another profile with information and exposures for local debugging.
+logging:
+  pattern:
+    dateformat: dd/MM/yyyy HH:mm:ss.SSS,America/Sao_Paulo
+  level: # ERROR, WARN, INFO, DEBUG, or TRACE
+    root: info # dev: debug
+    web: trace # dev: debug
+    sql: debug # dev: debug
+    # java:
+    #   sql: debug
+    # javax:
+    #   ws: debug
+    feign: trace # dev: debug
+    org:
+      springframework:
+        # web: debug
+        # jdbc:
+        #   core:
+        #     JdbcTemplate: debug # dev: debug
+        #     StatementCreatorUtils: trace # dev: trace
+        transaction:
+          interceptor: trace # dev: trace, to easily trace transaction behavior
+      hibernate:
+        # SQL: debug # dev: debug
+        orm:
+          jdbc:
+            bind: trace # dev: trace, show parameter values, for Hibernate 6 (spring-boot 3.*.*)
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace # dev: trace, show parameter values, for Hibernate 5 (spring-boot 2.7.*)
+      apache:
+        http: debug
+    com:
+      zenvia: trace
+    br:
+      com:
+        example: trace
+
+# Actuator exposing system metrics using base path "{{SERVER_URL}}/actuator/*"
+# @see more: https://docs.spring.io/spring-boot/docs/current/actuator-api/htmlsingle/
+# Actuator exposing all environment variables in GET "{{SERVER_URL}}/actuator/env"
+management:
+  endpoints:
+    web:
+      exposure: # env, health, info, auditevents, beans, caches, conditions, configgroups, flyway, heapdump, httpexchanges, integrationgraph, liquibase, logfile, loggers, mappings, metrics, prometheus, quartz, scheduledtasks, sessions, shutdown, startup, threaddump,
+        include: env, health, info, beans, caches, logfile, loggers, mappings, metrics, scheduledtasks, conditions

@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-ApiApplication<example-api>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.example.api.ApiApplication",
+      "projectName": "example-api",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "preLaunchTask": "java (build): Build Workspace"
+    }
+  ]
+}

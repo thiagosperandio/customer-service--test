@@ -1,0 +1,38 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "java.saveActions.organizeImports": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.cleanup.actionsOnSave": [
+    "addOverride",
+    "stringConcatToTextBlock",
+    "addDeprecated",
+    "invertEquals",
+    // "qualifyMembers",
+    // "qualifyStaticMembers",
+    // "instanceofPatternMatch",
+    "lambdaExpression",
+    "switchExpression"
+  ],
+  "java.codeGeneration.generateComments": true,
+  "java.codeGeneration.hashCodeEquals.useJava7Objects": true,
+  "java.codeGeneration.toString.codeStyle": "STRING_BUILDER_CHAINED",
+  "java.codeGeneration.toString.template": "{ \"${object.className}\": { \"${member.name()}\": \"${member.value}\", ${otherMembers}] } }",
+  "java.codeGeneration.useBlocks": true,
+  "java.eclipse.downloadSources": true,
+  "java.implementationsCodeLens.enabled": true,
+  "java.referencesCodeLens.enabled": true,
+  "xml.codeLens.enabled": true,
+  "diffEditor.codeLens": true,
+  "files.associations": {
+    "*.csh": "shellscript"
+  },
+  "[java]": {
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false
+  }
+}
