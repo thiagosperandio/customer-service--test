@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:${DB_NAME:testdb}
     driverClassName: org.h2.Driver
-    username: admin
-    password: admin
+    username: ${DB_USER:admin}
+    password: ${DB_PASSW:admin}
   h2:
     console:
       enabled: true
@@ -11,8 +11,9 @@ spring:
       settings.web-allow-others: true
   sql:
     init:
-      mode: never
+      mode: embedded
   jpa:
+    open-in-view: false
     show-sql: false # dev: true
     hibernate:
       ddl-auto: create-drop # Hibernate ddl auto (create, create-drop, validate, update)
@@ -20,6 +21,8 @@ spring:
     properties:
       hibernate:
         "[generate_statistics]": true # dev: true, Log info to get a better insight into Hibernate internal workings.
+  messages:
+    encoding: UTF-8
   output:
     ansi:
       enabled: ALWAYS # to colorize output
@@ -27,9 +30,23 @@ spring:
 server:
   port: 8080
 
+clients:
+  url:
+    cep: https://viacep.com.br/
+
+feign:
+  client:
+    config:
+      default:
+        logger-level: full
+        connectTimeout: 300000
+        readTimeout: 300000
+
 # > ATTENTION: these values are in the default properties file only because it is a test application.
 # > The right thing to do is to create another profile with information and exposures for local debugging.
 logging:
+  pattern:
+    dateformat: dd/MM/yyyy HH:mm:ss.SSS,America/Sao_Paulo
   level: # ERROR, WARN, INFO, DEBUG, or TRACE
     root: info # dev: debug
     web: trace # dev: debug

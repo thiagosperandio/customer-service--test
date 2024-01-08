@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.api.domain.Customer;
+import com.example.api.dto.model.CustomerDTO;
 import com.example.api.exception.BusinessException;
 import com.example.api.repository.CustomerRepository;
 
@@ -55,24 +56,29 @@ public class CustomerService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Customer insertCustomer(Customer customer) {
+	public Customer insertCustomer(@Valid @NotNull CustomerDTO customerDTO) {
+		if (customerDTO.getId() != null) {
+			throw new BusinessException("ID do objeto está preenchido, não é permitido informar ID.");
+		}
+		Customer customer = Customer.builder()
+				.name(customerDTO.getName())
+				.email(customerDTO.getEmail())
+				.gender(customerDTO.getGender())
+				.build();
 		customer = save(customer);
 
 		return customer;
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Customer updateCustomer(Long id, @Valid @NotNull Customer customer) {
-		List<String> errors = new ArrayList<>();
-		if (List.of(id, customer.getId()).stream().anyMatch(Objects::isNull)) {
-			errors.add("ID está nulo");
-		}
-		if (!Objects.equals(id, customer.getId())) {
-			errors.add("ID do objeto está diferente do ID da rota");
-		}
-		if (!errors.isEmpty()) {
-			throw new BusinessException(errors);
-		}
+	public Customer updateCustomer(Long id, @Valid @NotNull CustomerDTO customerDTO) {
+		Customer customer = Customer.builder()
+				.id(customerDTO.getId())
+				.name(customerDTO.getName())
+				.email(customerDTO.getEmail())
+				.gender(customerDTO.getGender())
+				.build();
+		validateUpdate(id, customer);
 		repository.findById(customer.getId()).ifPresentOrElse(
 				customerFinded -> {
 					if (customer.getName().length() >= MIN_CHAR_VALID_NAME) {
@@ -88,6 +94,19 @@ public class CustomerService {
 
 		return repository.findById(id)
 				.orElseThrow(() -> new BusinessException("Customer not exists"));
+	}
+
+	private void validateUpdate(Long id, Customer customer) {
+		List<String> errors = new ArrayList<>();
+		if (List.of(id, customer.getId()).stream().anyMatch(Objects::isNull)) {
+			errors.add("ID está nulo");
+		}
+		if (!Objects.equals(id, customer.getId())) {
+			errors.add("ID do objeto está diferente do ID da rota");
+		}
+		if (!errors.isEmpty()) {
+			throw new BusinessException(errors);
+		}
 	}
 
 	/**

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.api.domain.Customer;
+import com.example.api.dto.model.CustomerDTO;
 import com.example.api.service.CustomerService;
 
 @RestController
@@ -48,13 +49,13 @@ public class CustomerController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<Customer> insert(@RequestBody @Valid Customer input) {
+	public ResponseEntity<Customer> insert(@RequestBody @Valid CustomerDTO input) {
 		var response = service.insertCustomer(input);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody @Valid Customer input) {
+	public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody @Valid CustomerDTO input) {
 		var response = service.updateCustomer(id, input);
 		return ResponseEntity.ok(response);
 	}

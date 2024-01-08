@@ -1,13 +1,19 @@
 package com.example.api.domain;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.example.api.validators.annotations.Gender;
 
@@ -31,17 +37,21 @@ public class Customer {
 	private Long id;
 
 	@Column(nullable = false, length = 255)
-	@NotEmpty
+	@NotBlank
 	private String name;
 
 	@Column(nullable = false, length = 255)
-	@NotEmpty
+	@NotBlank
 	@Email
 	private String email;
 
 	@Column(nullable = false, length = 1)
-	@NotEmpty
+	@NotBlank
 	@Gender
+	@Size(min = 1, max = 1)
 	private String gender;
+
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Address> addresses;
 
 }
