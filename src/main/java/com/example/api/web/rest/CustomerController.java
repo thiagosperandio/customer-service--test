@@ -38,8 +38,10 @@ public class CustomerController {
 			@RequestParam(name = "name-like", required = false) String nameLike,
 			@RequestParam(name = "email-like", required = false) String emailLike,
 			@RequestParam(name = "gender-char", required = false) String gender,
+			@RequestParam(name = "city-like", required = false) String cityLike,
+			@RequestParam(name = "state", required = false) String state,
 			@PageableDefault(sort = "name", direction = Direction.ASC) Pageable pageable) {
-		return service.findAll(nameLike, emailLike, gender, pageable);
+		return service.findAll(nameLike, emailLike, gender, cityLike, state, pageable);
 	}
 
 	@GetMapping("/{id}")

@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -13,13 +16,16 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.api.domain.Address;
 import com.example.api.domain.Customer;
 import com.example.api.dto.model.CustomerDTO;
 import com.example.api.exception.BusinessException;
 import com.example.api.repository.CustomerRepository;
+import com.example.api.util.ObjectUtil;
 
 @Service
 public class CustomerService {
@@ -32,8 +38,55 @@ public class CustomerService {
 		this.repository = repository;
 	}
 
-	public Page<Customer> findAll(String nameLike, String emailLike, String gender, Pageable pageable) {
+	public Page<Customer> findAll(String nameLike, String emailLike, String gender, String cityLike, String state,
+			Pageable pageable) {
 
+		if (ObjectUtil.isNotNullAndNotEmptyAnyElements(cityLike, state)) {
+			return getSpecificationOfCustomer(nameLike, emailLike, gender, cityLike, state, pageable);
+
+		} else {
+			return getExampleOfCustomer(nameLike, emailLike, gender, pageable);
+		}
+	}
+
+	private Page<Customer> getSpecificationOfCustomer(String nameLike, String emailLike, String gender, String cityLike,
+			String state, Pageable pageable) {
+		var specification = (Specification<Customer>) (root, query, criteriaBuilder) -> {
+
+			List<Predicate> predicates = new ArrayList<>();
+
+			if (ObjectUtil.isNotNullAndNotEmpty(nameLike)) {
+				predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")),
+						"%" + nameLike.toLowerCase() + "%")));
+			}
+
+			if (ObjectUtil.isNotNullAndNotEmpty(emailLike)) {
+				predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("email")),
+						"%" + emailLike.toLowerCase() + "%")));
+			}
+
+			if (ObjectUtil.isNotNullAndNotEmpty(gender)) {
+				predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("gender"), gender)));
+			}
+
+			Join<Customer, Address> addressJoin = root.join("addresses", JoinType.LEFT);
+
+			if (ObjectUtil.isNotNullAndNotEmpty(cityLike)) {
+				predicates.add(criteriaBuilder.like(criteriaBuilder.lower(addressJoin.get("city")),
+						"%" + cityLike.toLowerCase() + "%"));
+			}
+
+			if (ObjectUtil.isNotNullAndNotEmpty(state)) {
+				predicates.add(criteriaBuilder.equal(addressJoin.get("stateAbbreviation"), state));
+			}
+
+			query.distinct(true);
+			return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+		};
+		return repository.findAll(specification, pageable);
+	}
+
+	private Page<Customer> getExampleOfCustomer(String nameLike, String emailLike, String gender, Pageable pageable) {
 		var customerSearchModel = Customer.builder()
 				.name(nameLike)
 				.email(emailLike)

@@ -8,8 +8,8 @@
       "group": "build",
       "problemMatcher": [],
       "label": "java (build): Build Workspace",
-      "detail": "$(tools) Build all the Java projects in workspace.",
-      "dependsOn": ["mvnw: clean"]
+      "detail": "$(tools) Build all the Java projects in workspace."
+      // "dependsOn": ["mvnw: clean"]
     },
     {
       "label": "mvnw: clean",
