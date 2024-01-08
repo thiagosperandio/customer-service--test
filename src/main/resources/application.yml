@@ -30,6 +30,12 @@ spring:
 server:
   port: 8080
 
+app:
+  auth:
+    user: user
+    password: 87b&dud!ub8*1vAV&HvvQ
+  show-exception-response: false
+
 clients:
   url:
     cep: https://viacep.com.br/
@@ -81,3 +87,12 @@ logging:
     br:
       com:
         example: trace
+
+# Actuator exposing system metrics using base path "{{SERVER_URL}}/actuator/*"
+# @see more: https://docs.spring.io/spring-boot/docs/current/actuator-api/htmlsingle/
+# Actuator exposing all environment variables in GET "{{SERVER_URL}}/actuator/env"
+management:
+  endpoints:
+    web:
+      exposure: # env, health, info, auditevents, beans, caches, conditions, configgroups, flyway, heapdump, httpexchanges, integrationgraph, liquibase, logfile, loggers, mappings, metrics, prometheus, quartz, scheduledtasks, sessions, shutdown, startup, threaddump,
+        include: env, health, info, beans, caches, logfile, loggers, mappings, metrics, scheduledtasks, conditions

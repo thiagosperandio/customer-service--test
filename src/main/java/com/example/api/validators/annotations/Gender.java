@@ -17,7 +17,7 @@ import com.example.api.validators.GenderValidator;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Gender {
 
-	String message() default "${GenderInvalidMessage}";
+	String message() default "{GenderInvalidMessage}";
 
 	Class<?>[] groups() default {};
 

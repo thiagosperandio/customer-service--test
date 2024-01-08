@@ -4,6 +4,21 @@
             "name": "clients.url.cep",
             "type": "java.lang.String",
             "description": "A description for 'clients.url.cep'"
+        },
+        {
+            "name": "app.show-exception-response",
+            "type": "java.lang.String",
+            "description": "A description for 'app.show-exception-response'"
+        },
+        {
+            "name": "app.auth.user",
+            "type": "java.lang.String",
+            "description": "A description for 'app.auth.user'"
+        },
+        {
+            "name": "app.auth.password",
+            "type": "java.lang.String",
+            "description": "A description for 'app.auth.password'"
         }
     ]
 }
