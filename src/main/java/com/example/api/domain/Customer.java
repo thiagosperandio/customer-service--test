@@ -9,6 +9,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import com.example.api.validators.annotations.Gender;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,17 +30,18 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 255)
 	@NotEmpty
 	private String name;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 255)
 	@NotEmpty
 	@Email
 	private String email;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 1)
 	@NotEmpty
+	@Gender
 	private String gender;
 
 }
