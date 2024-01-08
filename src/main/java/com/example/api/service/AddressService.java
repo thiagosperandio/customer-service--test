@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,13 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.api.clients.CepApiClient;
 import com.example.api.domain.Address;
 import com.example.api.domain.Customer;
-import com.example.api.dto.client.CepClientDTO;
-import com.example.api.dto.model.AddressDTO;
+import com.example.api.dto.client.CepAddressClientDTO;
+import com.example.api.dto.model.AddressInsertDTO;
+import com.example.api.dto.model.AddressViewerDTO;
 import com.example.api.exception.BusinessException;
 import com.example.api.repository.AddressRepository;
+import com.example.api.util.ObjectUtil;
 
+import feign.FeignException.BadRequest;
+import feign.FeignException.NotFound;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AddressService {
@@ -37,7 +45,7 @@ public class AddressService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Address insertAddress(@Valid @NotNull AddressDTO addressDTO) {
+	public Address insertAddress(@Valid @NotNull AddressInsertDTO addressDTO) {
 		Address address = mapFrom(addressDTO);
 		if (address.getId() != null) {
 			throw new BusinessException("ID do objeto está preenchido, não é permitido informar ID.");
@@ -48,7 +56,7 @@ public class AddressService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public Address updateAddress(Long id, @Valid @NotNull AddressDTO addressDTO) {
+	public Address updateAddress(Long id, @Valid @NotNull AddressInsertDTO addressDTO) {
 		Address address = mapFrom(addressDTO);
 		validateUpdate(id, address);
 
@@ -60,14 +68,46 @@ public class AddressService {
 				.orElseThrow(() -> new BusinessException("Address not exists"));
 	}
 
-	private Address mapFrom(AddressDTO addressDTO) {
+	private Address mapFrom(AddressInsertDTO addressInsertDTO) {
+		CepAddressClientDTO cepClientDTO = findCep(addressInsertDTO.getZipCode());
+
+		Customer customer = Customer.builder()
+				.id(addressInsertDTO.getCustomerId())
+				.build();
+		String complement = Stream.of(
+				addressInsertDTO.getAddressComplement(),
+				cepClientDTO.getAddressComplement())
+				.filter(ObjectUtil::isNotNullAndNotEmpty)
+				.collect(Collectors.joining(", "));
+
+		return Address.builder()
+				.id(addressInsertDTO.getId())
+				.customer(customer)
+				.zipCode(ObjectUtil.getOnlyNumbers(addressInsertDTO.getZipCode()))
+				.addressLine(cepClientDTO.getAddressLine())
+				.addressNumber(addressInsertDTO.getAddressNumber())
+				.addressComplement(complement)
+				.district(cepClientDTO.getDistrict())
+				.city(cepClientDTO.getCity())
+				.stateAbbreviation(cepClientDTO.getStateAbbreviation())
+				.ibgeCode(cepClientDTO.getIbgeCode())
+				.giaCode(cepClientDTO.getGiaCode())
+				.dddCode(cepClientDTO.getDddCode())
+				.siafiCode(cepClientDTO.getSiafiCode())
+				.build();
+	}
+
+	private Address mapFrom(AddressViewerDTO addressDTO) {
+		Customer customer = Customer.builder()
+				.id(addressDTO.getCustomerId())
+				.build();
+
 		return Address.builder()
 				.id(addressDTO.getId())
-				.customer(Customer.builder()
-						.id(addressDTO.getCustomerId())
-						.build())
+				.customer(customer)
 				.zipCode(addressDTO.getZipCode())
 				.addressLine(addressDTO.getAddressLine())
+				.addressNumber(addressDTO.getAddressNumber())
 				.addressComplement(addressDTO.getAddressComplement())
 				.district(addressDTO.getDistrict())
 				.city(addressDTO.getCity())
@@ -79,9 +119,27 @@ public class AddressService {
 				.build();
 	}
 
+	private AddressViewerDTO mapFrom(Address address) {
+		return AddressViewerDTO.builder()
+				.id(address.getId())
+				.customerId(address.getId())
+				.zipCode(address.getZipCode())
+				.addressLine(address.getAddressLine())
+				.addressNumber(address.getAddressNumber())
+				.addressComplement(address.getAddressComplement())
+				.district(address.getDistrict())
+				.city(address.getCity())
+				.stateAbbreviation(address.getStateAbbreviation())
+				.ibgeCode(address.getIbgeCode())
+				.giaCode(address.getGiaCode())
+				.dddCode(address.getDddCode())
+				.siafiCode(address.getSiafiCode())
+				.build();
+	}
+
 	private void validateUpdate(Long id, Address address) {
 		List<String> errors = new ArrayList<>();
-		if (List.of(id, address.getId()).stream().anyMatch(Objects::isNull)) {
+		if (Stream.of(id, address.getId()).anyMatch(Objects::isNull)) {
 			errors.add("ID está nulo");
 		}
 		if (!Objects.equals(id, address.getId())) {
@@ -111,8 +169,17 @@ public class AddressService {
 		repository.deleteById(id);
 	}
 
-	public CepClientDTO findCep(Long cep) {
-		return cepClient.getCep(cep);
+	public CepAddressClientDTO findCep(String cep) {
+		try {
+			var cepClientDTO = cepClient.getCep(ObjectUtil.getOnlyNumbers(cep));
+			if (cepClientDTO == null || cepClientDTO.getZipCode() == null) {
+				throw new BusinessException("CEP não encontrado");
+			}
+			return cepClientDTO;
+		} catch (BadRequest | NotFound e) {
+			log.error("CEP não encontrado", e);
+			throw new BusinessException("CEP não encontrado", e);
+		}
 	}
 
 }

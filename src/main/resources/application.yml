@@ -20,7 +20,7 @@ spring:
     defer-datasource-initialization: true
     properties:
       hibernate:
-        "[generate_statistics]": true # dev: true, Log info to get a better insight into Hibernate internal workings.
+        "[generate_statistics]": false # dev: true, Log info to get a better insight into Hibernate internal workings.
   messages:
     encoding: UTF-8
   output:

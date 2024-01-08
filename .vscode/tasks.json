@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "java (build)",
+      "paths": ["${workspace}"],
+      "isFullBuild": true,
+      "group": "build",
+      "problemMatcher": [],
+      "label": "java (build): Build Workspace",
+      "detail": "$(tools) Build all the Java projects in workspace.",
+      "dependsOn": ["mvnw: clean"]
+    },
+    {
+      "label": "mvnw: clean",
+      "type": "shell",
+      "command": "mvnw clean",
+      "linux": {
+        "command": "./mvnw clean"
+      },
+      "group": "build"
+    },
+    {
+      "label": "mvnw: clean validate",
+      "type": "shell",
+      "command": "mvnw clean validate",
+      "linux": {
+        "command": "./mvnw clean validate"
+      },
+      "group": "build"
+    },
+    {
+      "label": "mvnw: clean compile",
+      "type": "shell",
+      "command": "mvnw clean compile",
+      "linux": {
+        "command": "./mvnw clean compile"
+      },
+      "group": "build"
+    }
+  ]
+}

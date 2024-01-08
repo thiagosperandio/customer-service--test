@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressDTO {
+public class AddressInsertDTO {
 
 	private Long id;
 
@@ -25,29 +25,8 @@ public class AddressDTO {
 	private String zipCode;
 
 	@NotBlank
-	private String addressLine;
-
-	@NotBlank
 	private String addressNumber;
 
 	private String addressComplement;
 
-	@NotBlank
-	private String district;
-
-	@NotBlank
-	private String city;
-
-	@NotBlank
-	@Size(min = 2, max = 2)
-	private String stateAbbreviation;
-
-	private String ibgeCode;
-
-	private String giaCode;
-
-	@Size(min = 2, max = 2)
-	private String dddCode;
-
-	private String siafiCode;
 }

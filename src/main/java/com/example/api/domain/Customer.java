@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -30,6 +32,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@NamedEntityGraph(name = "customer-entity-graph", attributeNodes = { @NamedAttributeNode("addresses") })
 public class Customer {
 
 	@Id
@@ -51,7 +54,7 @@ public class Customer {
 	@Size(min = 1, max = 1)
 	private String gender;
 
-	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
 	private Set<Address> addresses;
 
 }

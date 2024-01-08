@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -99,7 +100,7 @@ public class CustomerService {
 
 	private void validateUpdate(Long id, Customer customer) {
 		List<String> errors = new ArrayList<>();
-		if (List.of(id, customer.getId()).stream().anyMatch(Objects::isNull)) {
+		if (Stream.of(id, customer.getId()).anyMatch(Objects::isNull)) {
 			errors.add("ID está nulo");
 		}
 		if (!Objects.equals(id, customer.getId())) {

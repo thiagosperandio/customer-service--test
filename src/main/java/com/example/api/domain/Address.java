@@ -11,9 +11,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +25,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ADDRESS")
+@Table(name = "ADDRESS", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "zipCode", "addressNumber", "addressComplement" }) })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,6 +39,7 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_Customer", nullable = false)
 	@NotNull
@@ -53,7 +58,7 @@ public class Address {
 	@NotBlank
 	private String addressNumber;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = true, length = 255)
 	private String addressComplement;
 
 	@Column(nullable = false, length = 255)
@@ -72,14 +77,14 @@ public class Address {
 	@Column(nullable = false, length = 255)
 	private String ibgeCode;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = true, length = 255)
 	private String giaCode;
 
-	@Column(nullable = false, length = 2)
+	@Column(nullable = true, length = 2)
 	@Size(min = 2, max = 2)
 	private String dddCode;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = true, length = 255)
 	private String siafiCode;
 
 }

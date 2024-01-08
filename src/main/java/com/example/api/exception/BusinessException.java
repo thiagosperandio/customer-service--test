@@ -5,9 +5,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import lombok.Getter;
 
-public class BusinessException extends RuntimeException {
+public class BusinessException extends ResponseStatusException {
+
+	/**
+	 *
+	 */
+	private static final HttpStatus defaultStatus = HttpStatus.BAD_REQUEST;
 
 	private static final long serialVersionUID = 1L;
 
@@ -15,25 +23,37 @@ public class BusinessException extends RuntimeException {
 	private final List<String> errors = new ArrayList<>();
 
 	public BusinessException(List<String> errors) {
-		super();
+		super(defaultStatus);
 		this.errors.addAll(errors);
 	}
 
 	public BusinessException(List<String> errors, Throwable cause) {
-		super(cause);
+		super(defaultStatus, defaultStatus.getReasonPhrase(), cause);
 		this.errors.addAll(errors);
 	}
 
 	public BusinessException(String message) {
-		super(message);
+		super(defaultStatus, message);
 	}
 
 	public BusinessException(Throwable cause) {
-		super(cause);
+		super(defaultStatus, defaultStatus.getReasonPhrase(), cause);
 	}
 
 	public BusinessException(String message, Throwable cause) {
-		super(message, cause);
+		super(defaultStatus, message, cause);
+	}
+
+	public BusinessException(HttpStatus httpStatus, String message, Throwable cause) {
+		super(httpStatus, message, cause);
+	}
+
+	public BusinessException(HttpStatus httpStatus, Throwable cause) {
+		super(httpStatus, httpStatus.getReasonPhrase(), cause);
+	}
+
+	public BusinessException(HttpStatus httpStatus, String message) {
+		super(httpStatus, message);
 	}
 
 	/**

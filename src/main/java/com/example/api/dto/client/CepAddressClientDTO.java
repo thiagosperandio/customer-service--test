@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CepClientDTO {
+public class CepAddressClientDTO {
 	@JsonAlias("cep")
 	private String zipCode;
 
