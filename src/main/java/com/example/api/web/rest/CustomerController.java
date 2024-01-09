@@ -47,7 +47,7 @@ public class CustomerController {
 	@GetMapping("/{id}")
 	public Customer findById(@PathVariable Long id) {
 		return service.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer não encontrado"));
 	}
 
 	@PostMapping("/")

@@ -41,8 +41,7 @@ public class ExceptionUtil {
 						.append("', message: '")
 						.append(exceptionOpt.map(Throwable::getLocalizedMessage).orElse("(no message found)"))
 						.append("', cause: '")
-						.append(exceptionOpt.map(Throwable::getCause).map(Throwable::toString)
-								.orElse("(no cause found)"))
+						.append(exceptionOpt.map(ExceptionUtil::addCausedBy).orElse("(no cause found)"))
 						.append("'. ");
 			}
 			return msgReturn.toString();
@@ -57,6 +56,58 @@ public class ExceptionUtil {
 	 */
 	public static final String getErrorMessage(Throwable exception) {
 		return getErrorMessage(exception, true);
+	}
+
+	/**
+	 *
+	 * @param exception
+	 * @return a new String with all caused-by texts
+	 */
+	public static final String addCausedBy(Throwable exception) {
+		return addCausedBy(exception, new StringBuilder())
+				.toString();
+	}
+
+	/**
+	 *
+	 * @param exception
+	 * @param stackTrace
+	 * @return the StringBuilder param filled with all caused-by texts
+	 */
+	public static final StringBuilder addCausedBy(Throwable exception, StringBuilder stringBuilder) {
+		if (exception != null && exception.getCause() != null) {
+			stringBuilder
+					.append(", cause: ")
+					.append(exception.getCause());
+			addCausedBy(exception.getCause(), stringBuilder);
+		}
+		return stringBuilder;
+	}
+
+	/**
+	 *
+	 * @param exception
+	 * @return a new String with the exception and all caused-by names
+	 */
+	public static final String getExceptionAndCausedByNames(Throwable exception) {
+		return getCausedByNames(exception, new StringBuilder(exception.getClass().getSimpleName()))
+				.toString();
+	}
+
+	/**
+	 *
+	 * @param exception
+	 * @param stackTrace
+	 * @return the StringBuilder param filled with all caused-by texts
+	 */
+	public static final StringBuilder getCausedByNames(Throwable exception, StringBuilder stringBuilder) {
+		if (exception != null && exception.getCause() != null) {
+			stringBuilder
+					.append(", cause: ")
+					.append(exception.getCause().getClass().getSimpleName());
+			getCausedByNames(exception.getCause(), stringBuilder);
+		}
+		return stringBuilder;
 	}
 
 	/**

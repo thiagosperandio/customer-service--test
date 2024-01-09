@@ -33,7 +33,7 @@ public class AddressController {
 	@GetMapping("/{id}")
 	public Address findById(@PathVariable Long id) {
 		return service.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address não encontrado"));
 	}
 
 	@GetMapping("/customer/{customerId}")
