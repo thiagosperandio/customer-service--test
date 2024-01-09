@@ -113,7 +113,7 @@ public class CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public Customer insertCustomer(@Valid @NotNull CustomerDTO customerDTO) {
 		if (customerDTO.getId() != null) {
-			throw new BusinessException("ID do objeto está preenchido, não é permitido informar ID.");
+			throw new BusinessException("Não é permitido informar ID");
 		}
 		Customer customer = mapFrom(customerDTO);
 		customer = save(customer);

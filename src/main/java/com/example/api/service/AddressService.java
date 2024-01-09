@@ -49,7 +49,7 @@ public class AddressService {
 	public Address insertAddress(@Valid @NotNull AddressInsertDTO addressDTO) {
 		Address address = mapFrom(addressDTO);
 		if (address.getId() != null) {
-			throw new BusinessException("ID do objeto está preenchido, não é permitido informar ID.");
+			throw new BusinessException("Não é permitido informar ID");
 		}
 		address = save(address);
 
