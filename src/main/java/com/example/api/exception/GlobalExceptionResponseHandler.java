@@ -15,6 +15,9 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -189,7 +192,7 @@ public class GlobalExceptionResponseHandler {
 	}
 
 	@ExceptionHandler({ NoSuchElementException.class, EntityNotFoundException.class,
-			MissingPathVariableException.class })
+			MissingPathVariableException.class, EmptyResultDataAccessException.class })
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ExceptionResponseDTO handleNoSuchElementFoundException(Exception exception, HttpServletRequest request) {
 		return makeDefaultResponse(exception, null, request, HttpStatus.NOT_FOUND);
@@ -202,10 +205,38 @@ public class GlobalExceptionResponseHandler {
 		return makeDefaultResponse(exception, null, request, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(Exception.class)
+	@ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ExceptionResponseDTO handleHibernateConstraintViolationException(
+			org.hibernate.exception.ConstraintViolationException exception,
+			HttpServletRequest request) {
+		var msg = "Ocorreu uma validação de integridade sobre os dados da requisição, favor contatar o administrador do sistema com o codigo: '"
+				+ UUID.randomUUID() + "' (" + exception.getConstraintName() + " - "
+				+ ExceptionUtil.getExceptionAndCausedByNames(exception) + ")";
+		return makeDefaultResponse(exception, msg, request, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ExceptionResponseDTO handleDataIntegrityViolationException(DataIntegrityViolationException exception,
+			HttpServletRequest request) {
+		var msg = "Ocorreu uma validação de integridade sobre os dados da requisição, favor contatar o administrador do sistema com o codigo: '"
+				+ UUID.randomUUID() + "' (" + ExceptionUtil.getExceptionAndCausedByNames(exception) + ")";
+		return makeDefaultResponse(exception, msg, request, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DataAccessException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ExceptionResponseDTO handleDataAccessException(DataAccessException exception, HttpServletRequest request) {
+		var msg = "Erro inesperado ao acessar a informação solicitada, contatar o administrador do sistema com o codigo: '"
+				+ UUID.randomUUID() + "' (" + ExceptionUtil.getExceptionAndCausedByNames(exception) + ")";
+		return makeDefaultResponse(exception, msg, request, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(Throwable.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ExceptionResponseDTO handleServerError(Exception exception, HttpServletRequest request) {
-		var msg = "Erro inesperado, contatar o administrador do sistema com o codigo: " + UUID.randomUUID();
+		var msg = "Erro inesperado, contatar o administrador do sistema com o codigo: '" + UUID.randomUUID() + "'";
 		return makeDefaultResponse(exception, msg, request, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

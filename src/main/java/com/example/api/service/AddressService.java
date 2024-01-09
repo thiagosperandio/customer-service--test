@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,10 +63,12 @@ public class AddressService {
 
 		repository.findById(address.getId()).ifPresentOrElse(
 				addressFinded -> save(address),
-				() -> new BusinessException("Address não encontrado no sistema"));
+				() -> {
+					throw new BusinessException(HttpStatus.NOT_FOUND, "Address não encontrado");
+				});
 
 		return repository.findById(id)
-				.orElseThrow(() -> new BusinessException("Address not exists"));
+				.orElseThrow(() -> new BusinessException("Address não existe"));
 	}
 
 	private Address mapFrom(AddressInsertDTO addressInsertDTO) {
